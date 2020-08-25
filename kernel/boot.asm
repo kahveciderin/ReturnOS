@@ -16,7 +16,7 @@ start:
 	jmp $			; Jump here - infinite loop!
 
 
-	text_string db 'This is the first text the ReturnOS prints!', 0
+	text_string db 'This is the first text ReturnOS prints!', 0
 
 
 print_string:			; Routine: output string in SI to screen
