@@ -28,7 +28,6 @@ print_string:			; Routine: output string in SI to screen
 	je .done		; If char is zero, end of string
 	int 10h			; Otherwise, print it
 	jmp .repeat
-
 .done:
 	ret
 
