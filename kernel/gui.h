@@ -1,0 +1,1 @@
+extern int draw_gui(char *[], uint8_t);
