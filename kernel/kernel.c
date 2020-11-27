@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdarg.h>
 /* Hardware text mode color constants. */
 enum vga_color {
 	VGA_COLOR_BLACK = 0,
@@ -60,7 +61,7 @@ void terminal_initialize(void)
 		}
 	}
 }
- 
+
 void terminal_setcolor(uint8_t color) 
 {
 	terminal_color = color;
@@ -80,7 +81,7 @@ void terminal_putchar(char c) {
         terminal_column = 0;
         return;
     }
-    
+
 	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
 	if (++terminal_column == VGA_WIDTH) {
 		terminal_column = 0;
@@ -99,7 +100,19 @@ void terminal_writestring(const char* data)
 {
 	terminal_write(data, strlen(data));
 }
- 
+int print_int8(uint8_t i) {
+    int printed=0;
+    while (i) {
+        terminal_putchar('0' + i % 10);
+        i /= 10;
+        printed++;
+    }
+    return printed;
+}
+int printf(const char *format, ...) {
+
+}
+
 void kernel_main(void) 
 {
 	/* Initialize terminal interface */
