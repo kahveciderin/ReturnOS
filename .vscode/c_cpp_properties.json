@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "~/opt/cross/include/**"
+            ],
+            "defines": [],
+            "compilerPath": "~/opt/cross/bin/i686-elf-gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "compilerArgs": [
+                "-T linker.ld",
+                "-ffreestanding",
+                "-O2",
+                "-nostdlib",
+                "-lgcc"
+            ]
+        }
+    ],
+    "version": 4
+}
