@@ -1,6 +1,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "gui.h"
+
+
 /* Hardware text mode color constants. */
 enum vga_color {
 	VGA_COLOR_BLACK = 0,
@@ -93,6 +96,7 @@ void terminal_putchar(char c)
 	}
 
 }
+
  
 void terminal_write(const char* data, size_t size) 
 {
@@ -106,12 +110,22 @@ void terminal_writestring(const char* data)
 {
 	terminal_write(data, strlen(data));
 }
+
+
+
+char *menu_elements[3] = {"Terminal", "Calculator", "Web Browser"};
+
+
+
+
  
 void kernel_main(void) 
 {
+	
 	/* Initialize terminal interface */
 	terminal_initialize();
  
 	/* Newline support is left as an exercise. */
-	terminal_writestring("haha no");
+	//terminal_writestring("haha no\nno");
+	draw_gui(menu_elements, 1);
 }
