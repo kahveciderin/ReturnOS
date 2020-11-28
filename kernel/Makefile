@@ -1,5 +1,9 @@
 .PHONY: build
-build: gui.co boot.asmo kernel.co
+C_SRC=$(wildcard *.c)
+ASM_SRC=$(wildcard *.asm)
+C_OBJS=$(C_SRC:.c=.co)
+ASM_OBJS=$(ASM_SRC:.asm=.asmo)
+build: ${C_OBJS} ${ASM_OBJS}
 	i686-elf-gcc -T linker.ld -o kernel.bin -ffreestanding -O2 -nostdlib -lgcc $^
 	make clean
 clean:
