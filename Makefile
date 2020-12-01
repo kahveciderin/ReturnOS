@@ -2,7 +2,6 @@ include make.config
 build: clean headers
 	for PROJECT in ${PROJECTS}; do DESTDIR="${SYSROOT}" ${MAKE} -C $${PROJECT} install; done
 headers:
-	
 	mkdir -p "${SYSROOT}"
 	for PROJECT in ${SYSTEM_HEADER_PROJECTS}; do DESTDIR="${SYSROOT}" ${MAKE} -C $${PROJECT} install-headers; done
 run: iso
@@ -10,7 +9,7 @@ run: iso
 	gvncviewer localhost:5900
 	killall qemu-system-${ARCH}
 	echo "Killed QEMU"
-
+	make clean
 iso: build
 	mkdir -p isodir
 	mkdir -p isodir/boot
