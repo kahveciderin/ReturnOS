@@ -1,5 +1,5 @@
-DEFAULT_HOST!=../default-host.sh
-HOST?=DEFAULT_HOST
+DEFAULT_HOST=i686-elf
+HOST=${DEFAULT_HOST}
 HOSTARCH!=../target-triplet-to-arch.sh $(HOST)
 
 CFLAGS?=-O2 -g
@@ -13,13 +13,12 @@ EXEC_PREFIX?=$(PREFIX)
 BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
-CFLAGS:=$(CFLAGS) -ffreestanding -Wall -Wextra
-CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude
-LDFLAGS:=$(LDFLAGS)
-LIBS:=$(LIBS) -nostdlib -lk -lgcc
+CFLAGS+=-ffreestanding -Wall -Wextra
+CPPFLAGS+=-D__is_kernel -Iinclude
+LDFLAGS+=
+LIBS+= -nostdlib -lk -lgcc
 
 ARCHDIR=arch/$(HOSTARCH)
-
 include $(ARCHDIR)/make.config
 
 CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS)
