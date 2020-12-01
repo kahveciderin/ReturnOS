@@ -1,4 +1,4 @@
-include ./config.sh
+include make.config
 build: clean headers
 	for PROJECT in ${PROJECTS}; do DESTDIR="${SYSROOT}" ${MAKE} -C $${PROJECT} install; done
 headers:

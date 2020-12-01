@@ -1,5 +1,5 @@
 PREFDIR=..
-include ../config.sh
+include ../make.config
 CFLAGS?=-O2 -g
 CPPFLAGS?=
 LDFLAGS?=
