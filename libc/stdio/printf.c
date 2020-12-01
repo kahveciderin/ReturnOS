@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 
 static bool print(const char* data, size_t length) {
 	const unsigned char* bytes = (const unsigned char*) data;
@@ -10,6 +11,20 @@ static bool print(const char* data, size_t length) {
 		if (putchar(bytes[i]) == EOF)
 			return false;
 	return true;
+}
+
+static bool print_base(size_t number, char base[], size_t baselen){
+	size_t rem = number;
+	char buff[16];
+	uint8_t tot = 0;
+	for(tot = 0; rem; tot++){
+		buff[tot] = base[(rem % baselen)];
+		rem /= baselen;
+	}
+
+	for(int i = tot - 1; i >= 0; i--){
+		putchar(buff[i]);
+	}
 }
 
 int printf(const char* restrict format, ...) {
@@ -61,7 +76,19 @@ int printf(const char* restrict format, ...) {
 			if (!print(str, len))
 				return -1;
 			written += len;
-		} else {
+		}else if (*format == 'd'){
+			format++;
+			int c = va_arg(parameters, int);
+			print_base(c, "0123456789", 10);
+		}else if (*format == 'x'){
+			format++;
+			int c = va_arg(parameters, int);
+			print_base(c, "0123456789abcdef", 16);
+		}else if (*format == 'X'){
+			format++;
+			int c = va_arg(parameters, int);
+			print_base(c, "0123456789ABCDEF", 16);
+		}else {
 			format = format_begun_at;
 			size_t len = strlen(format);
 			if (maxrem < len) {
