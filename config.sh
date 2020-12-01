@@ -4,6 +4,11 @@ export PROJECTS=libc kernel
 export MAKE=make
 export HOST=i686-elf
 
+ifeq ($(shell echo $${HOST} | grep -Eq 'i[[:digit:]]86-'),)
+export ARCH=i386
+else
+export ARCH=$(shell echo $${HOST} | grep -Eo '^[[:alnum:]_]*')
+endif
 export AR=${HOST}-ar
 export AS=${HOST}-as
 export CC=${HOST}-gcc
@@ -18,7 +23,7 @@ export CFLAGS=-O2 -g
 export CPPFLAGS=
 
 # Configure the cross-compiler to use the desired system root.
-export SYSROOT=$(shell pwd)/sysroot
+export SYSROOT:=$(shell pwd)/${PREFDIR}/sysroot
 export CC+=--sysroot=${SYSROOT}
 
 export CC+=-isystem=${INCLUDEDIR}

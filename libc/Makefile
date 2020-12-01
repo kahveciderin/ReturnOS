@@ -1,8 +1,5 @@
-DEFAULT_HOST=i686-elf
-#make this only happen if HOST is undefined
-HOST=${DEFAULT_HOST}
-HOSTARCH!=../target-triplet-to-arch.sh $(HOST)
-
+PREFDIR=..
+include ../config.sh
 CFLAGS?=-O2 -g
 CPPFLAGS?=
 LDFLAGS?=
@@ -19,9 +16,8 @@ CPPFLAGS:=$(CPPFLAGS) -D__is_libc -Iinclude
 LIBK_CFLAGS:=$(CFLAGS)
 LIBK_CPPFLAGS:=$(CPPFLAGS) -D__is_libk
 
-ARCHDIR=arch/$(HOSTARCH)
-
-include $(ARCHDIR)/make.config
+ARCHDIR:= arch/${ARCH}
+include ${ARCHDIR}/make.config
 
 CFLAGS:=$(CFLAGS) $(ARCH_CFLAGS)
 CPPFLAGS:=$(CPPFLAGS) $(ARCH_CPPFLAGS)
