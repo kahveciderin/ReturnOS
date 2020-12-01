@@ -23,45 +23,42 @@ CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS)
 CPPFLAGS:=$(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 LDFLAGS:=$(LDFLAGS) $(KERNEL_ARCH_LDFLAGS)
 LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS)
-
+K_C_SRC=$(shell find ./kernel -name *.c)
+K_ASM_SRC=$(shell find ./kernel -name *.S)
 KERNEL_OBJS=\
 $(KERNEL_ARCH_OBJS) \
-kernel/kernel.o \
+$(K_C_SRC:.c=.o) \
+$(K_ASM_SRC:.S=.o) \
 
 OBJS=\
-${ARCHDIR}/crti.o \
-${ARCHDIR}/crtbegin.o \
+${ARCH_CRT}\
 $(KERNEL_OBJS) \
-${ARCHDIR}/crtend.o \
-${ARCHDIR}/crtn.o \
 
 LINK_LIST=\
 $(LDFLAGS) \
-${ARCHDIR}/crti.o \
-${ARCHDIR}/crtbegin.o \
 $(KERNEL_OBJS) \
 $(LIBS) \
-${ARCHDIR}/crtend.o \
-${ARCHDIR}/crtn.o \
+${ARCH_CRT}\
 
 .PHONY: all clean install install-headers install-kernel
 .SUFFIXES: .o .c .S
 
 all: returnos.kernel
-
+	
 returnos.kernel: $(OBJS) ${ARCHDIR}/linker.ld
 	$(CC) -T ${ARCHDIR}/linker.ld -o $@ $(CFLAGS) $(LINK_LIST)
 	grub-file --is-x86-multiboot returnos.kernel
-
-${ARCHDIR}/crtbegin.o ${ARCHDIR}/crtend.o:
-	OBJ=`$(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=$(@F)` && cp "$$OBJ" $@
-
+${ARCHDIR}/crtstuff/01_crtbegin.o: ${ARCHDIR}/crtstuff/01_crtbegin.rawbin
+	cp $< $@
+${ARCHDIR}/crtstuff/02_crtend.o: ${ARCHDIR}/crtstuff/02_crtend.rawbin
+	cp $< $@
 .c.o:
 	$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
 .S.o:
 	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
-
+.rawbin.o:
+	cp $< $@
 clean:
 	rm -f returnos.kernel
 	rm -f $(OBJS) *.o */*.o */*/*.o
