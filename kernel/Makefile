@@ -56,7 +56,7 @@ returnos.kernel: $(OBJS) ${ARCHDIR}/linker.ld
 	$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
 .S.o:
-	nasm $< -o $@
+	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 .rawbin.o:
 	cp $< $@
 clean:

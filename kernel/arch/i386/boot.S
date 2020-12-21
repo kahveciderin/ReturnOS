@@ -1,16 +1,40 @@
-global loader                   ; the entry symbol for ELF
+# Declare constants for the multiboot header.
+.set ALIGN,    1<<0             # align loaded modules on page boundaries
+.set MEMINFO,  1<<1             # provide memory map
+.set FLAGS,    ALIGN | MEMINFO  # this is the Multiboot 'flag' field
+.set MAGIC,    0x1BADB002       # 'magic number' lets bootloader find the header
+.set CHECKSUM, -(MAGIC + FLAGS) # checksum of above, to prove we are multiboot
 
-MAGIC_NUMBER equ 0x1BADB002     ; define the magic number constant
-FLAGS        equ 0x0            ; multiboot flags
-CHECKSUM     equ -MAGIC_NUMBER  ; calculate the checksum
+# Declare a header as in the Multiboot Standard.
+.section .multiboot
+.align 4
+.long MAGIC
+.long FLAGS
+.long CHECKSUM
 
-section .text:
-align 4
-    dd MAGIC_NUMBER
-    dd FLAGS
-    dd CHECKSUM
+# Reserve a stack for the initial thread.
+.section .bss
+.align 16
+stack_bottom:
+.skip 16384 # 16 KiB
+stack_top:
 
-loader:
-    mov eax, 0xCAFEBABE
-.loop:
-    jmp .loop
+# The kernel entry point.
+.section .text
+.global _start
+.type _start, @function
+_start:
+	movl $stack_top, %esp
+
+	# Call the global constructors.
+	call _init
+
+	
+	# Transfer control to the main kernel.
+	call kernel_main
+
+	# Hang if kernel_main unexpectedly returns.
+	cli
+1:	hlt
+	jmp 1b
+.size _start, . - _start
