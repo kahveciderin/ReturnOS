@@ -31,7 +31,7 @@ $(K_C_SRC:.c=.o) \
 $(K_ASM_SRC:.S=.o) \
 
 OBJS=\
-${ARCH_CRT}\
+${ARCH_CRT_BUILD} \
 $(KERNEL_OBJS) \
 
 LINK_LIST=\
@@ -48,10 +48,10 @@ all: returnos.kernel
 returnos.kernel: $(OBJS) ${ARCHDIR}/linker.ld
 	$(CC) -T ${ARCHDIR}/linker.ld -o $@ $(CFLAGS) $(LINK_LIST)
 	grub-file --is-x86-multiboot returnos.kernel
-${ARCHDIR}/crtstuff/01_crtbegin.o: ${ARCHDIR}/crtstuff/01_crtbegin.rawbin
-	cp $< $@
-${ARCHDIR}/crtstuff/02_crtend.o: ${ARCHDIR}/crtstuff/02_crtend.rawbin
-	cp $< $@
+#${ARCHDIR}/crtstuff/01_crtbegin.o: ${ARCHDIR}/crtstuff/01_crtbegin.rawbin
+#	cp $< $@
+#${ARCHDIR}/crtstuff/02_crtend.o: ${ARCHDIR}/crtstuff/02_crtend.rawbin
+#	cp $< $@
 .c.o:
 	$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
