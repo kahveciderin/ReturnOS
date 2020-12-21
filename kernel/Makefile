@@ -56,7 +56,7 @@ ${ARCHDIR}/crtstuff/02_crtend.o: ${ARCHDIR}/crtstuff/02_crtend.rawbin
 	$(CC) -MD -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
 .S.o:
-	$(CC) -MD -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+	nasm $< -o $@
 .rawbin.o:
 	cp $< $@
 clean:
